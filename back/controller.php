@@ -1,6 +1,7 @@
 <?php  
     include("../Models/empleado.php");
     include("services.php");
+    include("consultas.php");
     include("conexion.php");
 
     $tipo_peticion = $_POST['tipo_peticion'];
@@ -29,6 +30,12 @@
             }else{
                 echo json_encode(array('success' => $respuesta, 'mensaje' => "Ocurrio un error, intente nuevamente!"));
             }
+            break;
+        case "Consultar":
+            $a = new consultas();
+            $id_empleado = $_POST["id_empleado"];
+            $respuesta = $a -> DatosEmpleado($db, $id_empleado);
+            echo $respuesta;
             break;
         case "Editar":
             echo "i es igual a 2";

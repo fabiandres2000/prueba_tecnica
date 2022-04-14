@@ -76,7 +76,7 @@
             <br>
             <div class="row">
             <div class="col-3"><h4>Roles *</h4></div>
-                <div class="col-9">
+                <div class="col-9" id="list">
                     <?php while ($item = $roles->fetch_assoc()) { ?>
                         <label><input name="roles[]" type="checkbox" id="cbox1" value="<?php echo $item['id'] ?>"> <?php echo $item['nombre'] ?></label><br>
                     <?php } ?>
@@ -97,5 +97,13 @@
         </div>
     </form>
     <script src="js/empleado.js"></script>
+    <script src="js/cargar_data_editar.js"></script>
+    <script type="text/javascript">
+        var tipo = ("<?php echo $tipo; ?>");
+        if(tipo == "Editar"){
+            var id_empleado = "<?php echo $_GET['id']; ?>";
+            cargar_data(id_empleado);
+        }
+    </script>
 </body>
 </html>

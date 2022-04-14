@@ -53,7 +53,7 @@
                             <td><?php echo $item['sexo'] ?></td>
                             <td><?php echo $item['area'] ?></td>
                             <td><?php echo $item['boletin'] ?></td>
-                            <td><a href="" class="btn btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></td>
+                            <td><a href="front/registrar_editar.php?tipo=Editar&id=<?php echo $item['id'] ?>" class="btn btn-default"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></td>
                             <td><button onclick="mensaje_eliminar(<?php echo $item['id'] ?>)" class="btn btn-default"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
                         </tr>
                     <?php } ?>
