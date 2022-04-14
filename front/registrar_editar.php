@@ -21,7 +21,7 @@
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
-    <form id="form_ge" action="../back/services.php" method="post">
+    <form id="form_ge" action="../back/controller.php" method="post">
         <div class="container">
             <h1><?php echo $tipo; ?> empleado</h1>
             <div class="alert alert-primary" role="alert">
@@ -89,7 +89,7 @@
                     <button type="submit" class="btn btn-info">Guardar</button>
                 </div>
                 <div class="col-3">
-                    <button class="btn btn-danger">Volver</button>
+                    <a href="../index.php" class="btn btn-danger">Volver</a>
                 </div>
                 <div class="col-3"></div>
             </div>

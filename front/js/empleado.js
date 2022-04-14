@@ -119,6 +119,82 @@ function armar_form_data(){
 
     paqueteDeDatos.append('boletin', boletin);
     paqueteDeDatos.append('roles', roles);
+    paqueteDeDatos.append('tipo_peticion', $("#tipo_peticion" ).val());
 
     return paqueteDeDatos;
+}
+
+function mensaje_eliminar(id){
+    Swal.fire({
+        title: 'Esta seguro de eliminar a este empleado?',
+        text: "No podra revertir esta accion",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          eliminar_empleado(id);
+        }
+    })
+}
+
+
+function eliminar_empleado(id){
+    let paqueteDeDatos = new FormData(); 
+    paqueteDeDatos.append('id_empleado', id);
+    paqueteDeDatos.append('tipo_peticion', "Eliminar");
+
+    $.ajax({
+        type: "POST", 
+        url: "back/controller.php",
+        contentType: false,
+        processData: false,
+        cache: false, 
+        data: paqueteDeDatos,
+        beforeSend: function(){
+            let timerInterval
+            Swal.fire({
+                title: 'Guardando datos',
+                html: 'Espere un momento...',
+                timer: 400000,
+                timerProgressBar: true,
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading()
+                    const b = Swal.getHtmlContainer().querySelector('b')
+                    timerInterval = setInterval(() => {
+                    
+                    }, 100)
+                },
+                willClose: () => {
+                    clearInterval(timerInterval)
+                }
+                }).then((result) => {
+                if (result.dismiss === Swal.DismissReason.timer) {
+                }
+            });          
+        },
+        success: function (data) { 
+            var jsonData = JSON.parse(data);
+            var icono = "";
+            if (jsonData.success == 1) {
+                icono = "success";
+                setTimeout(function(){ 
+                    location.reload();
+                }, 2500);
+            }else{
+                icono = "error";
+            }
+            Swal.fire({
+                position: 'center',
+                icon: icono,
+                title: jsonData.mensaje,
+                showConfirmButton: false,
+                timer: 2500
+            });
+        } 
+    });
 }

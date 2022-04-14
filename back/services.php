@@ -1,7 +1,4 @@
 <?php  
-    include("../Models/empleado.php");
-    include("conexion.php");
-
     class Services {
 
         public function GuardarEmpleado(Empleado $empleado, $db)
@@ -10,7 +7,8 @@
             $stmt->bind_param('sssiis', $empleado->nombre, $empleado->email, $empleado->sexo, $empleado->area, $empleado->boletin, $empleado->descripcion);
 
             if ($stmt->execute()) { 
-               return 1;
+                $res =  $this -> GuardarEmpleadoRol($db, $db->insert_id, $empleado->roles);
+                return $res;
             } else {
                 return 0;
             }
@@ -19,27 +17,32 @@
         public function EditarEmpleado($roles)
         {
            
+
         }
 
-        public function GuardarEmpleadoRol($db, $idEmpleado, $idRol)
+        public function GuardarEmpleadoRol($db, $idEmpleado, $roles)
         {
-            
+            $roles_ = explode(",", $roles);
+
+            foreach ($roles_ as $key) {
+                $stmt = $db->prepare("INSERT INTO empleado_rol (`empleado_id`, `rol_id`) VALUES (?, ?)");
+                $stmt->bind_param('ii',$idEmpleado, $key);
+                $stmt->execute();
+            }
+            return 1;
+        }
+
+        public function EliminarEmpleado($db, $id){
+            $stmt = $db->prepare("DELETE FROM empleado WHERE id = ?");
+            $stmt->bind_param("i", $id);
+
+            if ($stmt->execute()) { 
+                return 1;
+            } else {
+                return 0;
+            }
         }
     }
-
-
-   
-    $empleado = new Empleado($_POST["nombre"], $_POST["email"], $_POST["sexo"], $_POST["area"], $_POST["boletin"], $_POST["desc"],  $_POST["roles"]);
-
-    $a = new Services();
-    $respuesta = $a -> GuardarEmpleado($empleado, $db);
-
-    if($respuesta == 1){
-        echo json_encode(array('success' => $respuesta, 'mensaje' => "Datos guardados correctamente!"));
-    }else{
-        echo json_encode(array('success' => $respuesta, 'mensaje' => "Ocurrio un error, intente nuevamente!"));
-    }
-
 
 ?>
 

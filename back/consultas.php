@@ -18,7 +18,7 @@
 
         public function ConsultarEmpleados($db)
         {
-            $stmt = $db->prepare("SELECT e.nombre, e.email, e.sexo, a.nombre FROM `empleado` e INNER JOIN areas a ON a.id = e.area_id");
+            $stmt = $db->prepare("SELECT e.id, e.nombre, e.email, IF( e.sexo = 'M', 'Masculino', 'Femenino') as sexo, a.nombre as area, IF( e.boletin = 1 , 'Si', 'No') as boletin FROM `empleado` e INNER JOIN areas a ON a.id = e.area_id");
             $stmt->execute();
             $result = $stmt->get_result();
             return $result;
