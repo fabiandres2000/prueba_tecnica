@@ -27,6 +27,7 @@ function setearValores(json, roles){
     $("input[name=sexo][value='"+json.sexo+"']").prop("checked",true);	
     $("#area").val(json.area_id)
     $("#desc").val(json.descripcion)
+    $("#id_empleado").val(json.id)
 
     if(json.boletin == 1){
         $( "#boletin" ).prop( "checked", true );

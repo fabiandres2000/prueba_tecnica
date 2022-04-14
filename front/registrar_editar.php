@@ -94,6 +94,7 @@
                 <div class="col-3"></div>
             </div>
             <input type="hidden" id="tipo_peticion" name="tipo_peticion" value="<?php echo $tipo ?>">
+            <input type="hidden" id="id_empleado" name="tipo_peticion" value="">
         </div>
     </form>
     <script src="js/empleado.js"></script>

@@ -3,12 +3,12 @@ $('#form_ge').submit(function (ev) {
     if($("#tipo_peticion" ).val() == "Crear"){
         guardar_empleado();
     }else{
-        alert ("editar");
+        editar_empleado();
     }
     ev.preventDefault();
 });
 
-
+//funcion para guardar el empleado en la base de datos
 function guardar_empleado(){
     if(valiar_data()){
         let data = armar_form_data();
@@ -73,6 +73,7 @@ function guardar_empleado(){
     }
 }
 
+//validar todos los campos
 function valiar_data(){ 
 
     let nombre =  $( "#nombre_c" ).val();
@@ -97,6 +98,7 @@ function valiar_data(){
     return false;
 }
 
+//funcion para armar la data y enviar por metodo post a editar y guardar
 function armar_form_data(){ 
     let paqueteDeDatos = new FormData();
     
@@ -120,10 +122,13 @@ function armar_form_data(){
     paqueteDeDatos.append('boletin', boletin);
     paqueteDeDatos.append('roles', roles);
     paqueteDeDatos.append('tipo_peticion', $("#tipo_peticion" ).val());
+    paqueteDeDatos.append('id_empleado', $("#id_empleado").val());
 
     return paqueteDeDatos;
 }
 
+
+//confirmacion para eliminar el empleado
 function mensaje_eliminar(id){
     Swal.fire({
         title: 'Esta seguro de eliminar a este empleado?',
@@ -141,7 +146,7 @@ function mensaje_eliminar(id){
     })
 }
 
-
+// eliminar el empleado de la base de datos
 function eliminar_empleado(id){
     let paqueteDeDatos = new FormData(); 
     paqueteDeDatos.append('id_empleado', id);
@@ -197,4 +202,69 @@ function eliminar_empleado(id){
             });
         } 
     });
+}
+
+//funcion para editar el empleado
+function editar_empleado(){
+    if(valiar_data()){
+        let data = armar_form_data();
+        $.ajax({
+            type: $('#form_ge').attr('method'), 
+            url: $('#form_ge').attr('action'),
+            contentType: false,
+            processData: false,
+            cache: false, 
+            data: data,
+            beforeSend: function(){
+                let timerInterval
+                Swal.fire({
+                    title: 'Editando datos',
+                    html: 'Espere un momento...',
+                    timer: 400000,
+                    timerProgressBar: true,
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading()
+                        const b = Swal.getHtmlContainer().querySelector('b')
+                        timerInterval = setInterval(() => {
+                        
+                        }, 100)
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval)
+                    }
+                    }).then((result) => {
+                    if (result.dismiss === Swal.DismissReason.timer) {
+                    }
+                });          
+            },
+            success: function (data) { 
+                var jsonData = JSON.parse(data);
+                var icono = "";
+                if (jsonData.success == 1) {
+                    icono = "success";
+                    setTimeout(function(){ 
+                        location.reload();
+                    }, 2500);
+                }else{
+                    icono = "error";
+                }
+                Swal.fire({
+                    position: 'center',
+                    icon: icono,
+                    title: jsonData.mensaje,
+                    showConfirmButton: false,
+                    timer: 2500
+                });
+            } 
+        });
+    }else{
+        Swal.fire({
+            position: 'center',
+            icon: "error",
+            title: "Debe llenar todos los campos.",
+            showConfirmButton: false,
+            timer: 2500
+        });
+    }
 }

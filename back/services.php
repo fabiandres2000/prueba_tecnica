@@ -14,10 +14,24 @@
             }
         }
 
-        public function EditarEmpleado($roles)
+        public function EditarEmpleado($empleado, $db, $id_empleado)
         {
-           
+            $stmt = $db->prepare("UPDATE `empleado` SET `nombre`= ? ,`email`= ? ,`sexo`= ? ,`area_id`= ? ,`boletin`= ? ,`descripcion`= ?  WHERE `id` = ?");
+            $stmt->bind_param('sssiisi', $empleado->nombre, $empleado->email, $empleado->sexo, $empleado->area, $empleado->boletin, $empleado->descripcion, $id_empleado);
 
+            if ($stmt->execute()) { 
+
+                $stmt = $db->prepare("DELETE FROM empleado_rol WHERE empleado_id = ?");
+                $stmt->bind_param("i", $id_empleado);
+                if($stmt->execute()){
+                    $res =  $this -> GuardarEmpleadoRol($db, $id_empleado, $empleado->roles);
+                    return $res;
+                }else{
+                    return 0;
+                }
+            } else {
+                return 0;
+            }
         }
 
         public function GuardarEmpleadoRol($db, $idEmpleado, $roles)

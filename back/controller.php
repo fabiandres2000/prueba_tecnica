@@ -38,7 +38,16 @@
             echo $respuesta;
             break;
         case "Editar":
-            echo "i es igual a 2";
+            $empleado = new Empleado($_POST["nombre"], $_POST["email"], $_POST["sexo"], $_POST["area"], $_POST["boletin"], $_POST["desc"],  $_POST["roles"]);
+
+            $a = new Services();
+            $respuesta = $a -> EditarEmpleado($empleado, $db, $_POST["id_empleado"]);
+        
+            if($respuesta == 1){
+                echo json_encode(array('success' => $respuesta, 'mensaje' => "Datos modificados correctamente!"));
+            }else{
+                echo json_encode(array('success' => $respuesta, 'mensaje' => "Ocurrio un error, intente nuevamente!"));
+            }
             break;
     }
 
